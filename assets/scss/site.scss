@@ -1,0 +1,23 @@
+body{
+    background:#fff;
+    color:#1d1d1f;
+}
+html{
+    position:relative;
+    min-height:100%;
+}
+
+body{
+    margin-bottom:60px;
+}
+.footer{
+    position :absolute;
+    bottom:0;
+    width:100px;
+    white-space:nowrap;
+    line-height:60px;
+}
+@import "_menu.scss";
+@import "_contact.scss";
+@import "_footer.scss";
+@import "_product.scss";

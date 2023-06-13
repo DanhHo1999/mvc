@@ -1,0 +1,23 @@
+﻿@model _06_MvcWeb.Components.PostCategorySidebar.CategorySidebarData
+@if(Model.Categories.Count>0){
+	<h3 class='categorysidebar @(Model.level != 0 ? "d-none" : "")'><a class="text-decoration-none" asp-controller='ViewPost' asp-action='Index' asp-route-categorySlug="">Tất cả chuyên mục</a></h3>
+	@foreach(var category in Model.Categories)
+		{
+		@if (Model.level == 0)
+			@Html.Raw("<div class = 'categorysidebar'>")
+			<div>
+				<a class="@(Model.categorySlug == category.Slug ? " active":"") text-decoration-none" asp-controller="ViewPost" asp-action="Index" asp-route-categorySlug="@category.Slug">
+					@String.Concat(Enumerable.Repeat(" ",Model.level*3)) @category.Title
+				</a>
+			</div>
+			@if (category.CategoryChildren?.Count > 0)
+			{
+			@await Component.InvokeAsync("_06_MvcWeb.Components.PostCategorySidebar",new _06_MvcWeb.Components.PostCategorySidebar.CategorySidebarData{
+				Categories=category.CategoryChildren.ToList(),
+				level=Model.level+1,
+				categorySlug=Model.categorySlug
+				})
+			}
+			@if (Model.level==0)@Html.Raw("</div>")
+		}
+}

@@ -1,0 +1,69 @@
+﻿@model _06_MvcWeb.Blog.Models.CreatePostModel
+
+@{
+    ViewData["Title"] = "Thêm post";
+    var list = ViewBag.CategorySelectList as MultiSelectList;
+}
+
+<h1>@ViewData["Title"]</h1>
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Create">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="CategoryIds" class="control-label"></label>
+                <select asp-for="CategoryIds" multiple="multiple" asp-items="@list" class="w-100"></select>
+                <span asp-validation-for="CategoryIds" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea rows="2" asp-for="Description" class="form-control" ></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Slug" class="control-label"></label>
+                <input asp-for="Slug" class="form-control" />
+                <span asp-validation-for="Slug" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Content" class="control-label"></label>
+                <textarea id="summernote1" rows="5" asp-for="Content" class="form-control"></textarea>
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Published" /> @Html.DisplayNameFor(model => model.Published)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Tạo post" class="btn btn-primary mt-2" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+
+    <script src="~/lib/multiple-select/multiple-select.min.js"></script>
+    <link rel="stylesheet" href="~/lib/multiple-select/multiple-select.min.css" />
+
+    <script>
+        $("#CategoryIds").multipleSelect({
+            selectAll: false,
+            keepOpen: false,
+            isOpen: false,
+        });
+    </script>
+
+    <partial name="_ValidationScriptsPartial" />
+}
+<partial name="_Summernote" model="@(new Summernote("summernote1"){height=500})" />

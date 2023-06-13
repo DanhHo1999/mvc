@@ -1,0 +1,76 @@
+﻿@using _06_MvcWeb.Components
+@model List<Product>
+@{
+	var allCategories = ViewBag.Categories as List<ProductCategory>;
+	var selectedCategory = ViewBag.category as ProductCategory;
+	var childCategoryIds = ViewBag.childCategoryIds as int[];
+	var filteredProducts = ViewBag.filteredProducts as IEnumerable<Product>;
+}
+<nav aria-label="breadcrumb">
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a class="text-decoration-none" asp-controller='ViewProduct' asp-action='Index' asp-route-categorySlug="">Tất cả</a></li>
+		@if (selectedCategory != null)
+		{
+			var li = selectedCategory.ListParents();
+			foreach(var c in li)
+			{
+				<li class="breadcrumb-item">
+					<a class="text-decoration-none" asp-action="Index" asp-route-categorySlug="@c.Slug">@c.Title</a>
+				</li>
+			}
+		}
+	</ol>
+</nav>
+@if (selectedCategory != null)
+{
+	<h1>@selectedCategory.Title</h1>
+	<div>@Html.Raw(selectedCategory.Description)</div>
+}
+else
+{
+	<h1>Tất cả các sản phẩm</h1>
+}
+<hr>
+
+<div class="d-flex flex-wrap">
+	@foreach (var product in selectedCategory == null ? Model : filteredProducts)
+	{
+
+		<div class="card m-2" style="width:30%">
+			@{
+				var imgPath = "/Contents/planet/planet2.PNG";
+				var photo = product.Photos.FirstOrDefault();
+				if (photo != null) imgPath = "/contents/Products/" + photo.FileName;
+				<img class="card-img-top" src="@imgPath" alt="Card image cap">
+			}
+			
+			<div class="card-body">
+				<h5 class="card-title">@product.Title</h5>
+				<p class="card-text">
+					<div>@product.Description</div>
+					<div>
+						Chủ đề:
+						<strong class="text-danger">
+							@string.Join(" | ",product.ProductsAndCategories.Select(pc=>pc.ProductCategory.Title))
+						</strong>
+					</div>
+					<div class="author-row">
+						Tác giả: <strong>@product.Author.UserName</strong> |
+						Ngày cập nhật: <i>@product.DateUpdated.ToShortDateString()</i>
+					</div>
+				</p>
+				<a class="btn btn-primary" asp-controller="ViewProduct" asp-action="Detail" asp-route-productslug="@product.Slug">Xem chi tiết</a>
+			</div>
+		</div>
+	}
+</div>
+@await Html.PartialAsync("_PagingXTL",ViewBag.Page as PagingModel)
+
+
+@section Sidebar{
+	@await Component.InvokeAsync("_06_MvcWeb.Components.ProductCategorySidebar",new _06_MvcWeb.Components.ProductCategorySidebar.CategorySidebarData{
+		Categories=allCategories,
+		level=0,
+		categorySlug=ViewBag.categorySlug
+	})
+}

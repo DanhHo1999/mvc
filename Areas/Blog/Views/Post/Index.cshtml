@@ -1,0 +1,66 @@
+﻿@model IEnumerable<_06_MvcWeb.Blog.Models.Post>
+
+@{
+    ViewData["Title"] = "Danh sách blog";
+}
+
+<h1>Danh sách bài viết</h1>
+
+<p>
+    <a asp-action="Create">Tạo bài viết</a>
+</p>
+@await Html.PartialAsync("_PagingXTL",(PagingModel)ViewBag.Page)
+@await Html.PartialAsync("_Alerts")
+<table class="table">
+    <thead>
+        <tr>
+            <th>STT</th>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Published)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Author)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateUpdated)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+@if(Model!=null)@foreach (var item in Model) {
+        <tr>
+            <td>
+                    @(++ViewBag.itemIndex)
+            </td>
+            <td>
+                    <a asp-action="Edit" asp-route-id="@item.PostId" asp-route-p="@(((PagingModel)ViewBag.Page).currentPage)" asp-route-pagesize="@ViewBag.pagesize">@Html.DisplayFor(modelItem => item.Title)</a>
+                    <div>
+                        <small>
+                            @string.Join("  |  ",item.PostsAndCategories.Select(pc=>{
+                        return pc.PostCategory.Title;
+                        }))
+                        </small>
+                    </div>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Published)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Author.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateUpdated)
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.PostId">Chi tiết</a> |
+                <a class="text-danger" asp-action="Delete" asp-route-id="@item.PostId" asp-route-returnUrl="@Context.Request.Path?p=@(((PagingModel)ViewBag.Page).currentPage)&pagesize=@ViewBag.pagesize">Xóa</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,25 @@
+﻿@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService authorizationService;
+@{
+    var result = await authorizationService.AuthorizeAsync(User, "ViewManageMenu");
+}
+@if (result.Succeeded)
+{
+    <a class="nav-link text-light" asp-action="Index" asp-controller="Admin" asp-area="AdminCP"><i class="fas fa-cog"></i>Quản trị</a>
+   @* <div class="dropdown">
+        <a class="dropdown-toggle btn btn-outline-danger" href="#" data-bs-toggle="dropdown">
+            Manage
+        </a>
+        <div class="dropdown-menu dropdown-menu-end">
+            <a class="dropdown-item" asp-action="Index" asp-controller="DbManage" asp-area="Database">Quản lý database</a>
+            <a class="dropdown-item" asp-action="Index" asp-controller="Contact" asp-area="Contact">Quản lý liên hệ</a>
+
+            <a class="dropdown-item" asp-action="Index" asp-controller="Role" asp-area="Identity">Quản lý role</a>
+            <a class="dropdown-item" asp-action="Index" asp-controller="User" asp-area="Identity">Quản lý thành viên</a>
+
+            <a target="_blank" class="dropdown-item" asp-action="Index" asp-controller="FileManager" asp-area="Files">Quản lý file</a>
+
+            
+        </div>
+    </div>*@
+}

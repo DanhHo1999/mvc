@@ -1,0 +1,57 @@
+﻿@model IEnumerable<_06_MvcWeb.Blog.Models.PostCategory>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a class="btn btn-primary btn-sm" asp-action="Create">Tạo chuyên mục</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Slug)
+            </th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.OrderBy(c=>c.Title)) {
+    await RenderCategory(item,0);
+}
+    </tbody>
+</table>
+@{
+    async Task RenderCategory(PostCategory category,int level)
+    {
+        string prefix = string.Concat(Enumerable.Repeat("&nbsp;", level*5));
+        <tr>
+            <td>
+                <a class="text-decoration-none" asp-action="Edit" asp-route-id="@category.Id">@Html.Raw(prefix) @Html.DisplayFor(modelItem => category.Title)</a>
+                
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => category.Slug)
+            </td>
+            <td>
+
+                <a class="text-decoration-none" asp-action="Details" asp-route-id="@category.Id">Xem</a> |
+                <a class="text-decoration-none" asp-action="Delete" asp-route-id="@category.Id">Xóa</a>
+            </td>
+        </tr>
+        
+        if (category.CategoryChildren?.Count > 0)
+        {
+            foreach (var cCategory in category.CategoryChildren.OrderBy(c => c.Title))
+            {
+                await RenderCategory(cCategory,level+1);
+            }
+        }
+    }
+}

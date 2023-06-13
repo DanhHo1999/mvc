@@ -1,0 +1,18 @@
+﻿@model _06_MvcWeb.Products.Models.Product
+
+@{
+    ViewData["Title"] = "Xóa sản phẩm";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h3>Có chắc chắn xóa bài viết?</h3>
+<div>
+    <h4>@Model.Title</h4>
+    
+    <form asp-action="Delete" asp-route-returnUrl="@ViewBag.returnUrl">
+        <input type="hidden" asp-for="ProductId" />
+        <input type="submit" value="Xóa" class="btn btn-danger" /> |
+        <a href="@ViewBag.returnUrl">Trở về danh sách</a>
+    </form>
+</div>

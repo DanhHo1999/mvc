@@ -1,0 +1,18 @@
+﻿@using Microsoft.AspNetCore.Http
+@using Newtonsoft.Json
+@inject IHttpContextAccessor HttpContextAccessor
+
+
+@{
+    var session = HttpContextAccessor.HttpContext.Session;
+    string jsoncart = session.GetString(_06_MvcWeb.Products.Services.CartService.CARTKEY);
+    if (jsoncart != null)
+    {
+        var cart = JsonConvert.DeserializeObject<List<_06_MvcWeb.Products.Models.CartItem>>(jsoncart);
+        if (@cart.Count > 0)
+        {
+            <div class="nav-item"><a class="text-warning" asp-route="cart"><i class="fas fa-cart-plus"></i>(@cart.Count)</a></div>
+        }
+
+    }
+}

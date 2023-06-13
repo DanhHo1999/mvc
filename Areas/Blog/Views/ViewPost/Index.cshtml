@@ -1,0 +1,66 @@
+﻿@using _06_MvcWeb.Components
+@model List<Post>
+@{
+	var categories = ViewBag.Categories as List<PostCategory>;
+	var category = ViewBag.category as PostCategory;
+	var childCategoryIds = ViewBag.childCategoryIds as int[];
+	var postsCategory = ViewBag.postsCategory as IEnumerable<Post>;
+
+}
+<nav aria-label="breadcrumb">
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a class="text-decoration-none" asp-controller='ViewPost' asp-action='Index' asp-route-categorySlug="">Tất cả</a></li>
+		@if (category != null)
+		{
+			var li = category.ListParents();
+			foreach(var c in li)
+			{
+				<li class="breadcrumb-item">
+					<a class="text-decoration-none" asp-action="Index" asp-route-categorySlug="@c.Slug">@c.Title</a>
+				</li>
+			}
+		}
+	</ol>
+</nav>
+@if (category != null)
+{
+	<h1>@category.Title</h1>
+	<div>@category.Description</div>
+}
+else
+{
+	<h1>Tất cả các bài viết</h1>
+}
+<hr>
+
+@foreach (var post in category == null ? Model : postsCategory)
+{
+	<div class="media mt-3" style="border-bottom:3px solid #cccccc">
+		<img class="w-0" src="/Contents/planet/planet2.PNG" alt="Generic placeholder image">
+		<div class="media-body">
+			<h5 class="mt-0">
+				<a asp-controller="ViewPost" asp-action="Detail" asp-route-postslug="@post.Slug">@post.Title</a>
+				</h5>
+			@post.Description
+			<div>Chủ đề:
+				<strong class="text-danger">
+					@string.Join(" | ",post.PostsAndCategories.Select(pc=>pc.PostCategory.Title))
+				</strong>
+			</div>
+			<div class="author-row">
+				Tác giả: <strong>@post.Author.UserName</strong> | 
+				Ngày cập nhật: <i>@post.DateUpdated.ToShortDateString()</i>
+			</div>
+		</div>
+	</div>
+}
+@await Html.PartialAsync("_PagingXTL",ViewBag.Page as PagingModel)
+
+
+@section Sidebar{
+	@await Component.InvokeAsync("_06_MvcWeb.Components.PostCategorySidebar",new _06_MvcWeb.Components.PostCategorySidebar.CategorySidebarData{
+		Categories=categories,
+		level=0,
+		categorySlug=ViewBag.categorySlug
+	})
+}

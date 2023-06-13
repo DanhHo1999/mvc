@@ -1,0 +1,7 @@
+Uploads/
+bin/
+obj/
+.vs/
+node_modules/
+wwwroot/
+app/

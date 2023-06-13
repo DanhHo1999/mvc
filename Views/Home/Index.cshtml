@@ -1,0 +1,64 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    var products = ViewBag.products as IQueryable<_06_MvcWeb.Products.Models.Product>;
+    var posts = ViewBag.posts as IQueryable<_06_MvcWeb.Blog.Models.Post>;
+}
+@Html.Partial("_Alerts")
+
+<h2>Các sản phẩm</h2>
+<div class="d-flex flex-wrap">
+@foreach (var product in products)
+	{
+
+		<div class="card m-2" style="width:23%">
+			@{
+				var imgPath = "/Contents/planet/planet2.PNG";
+				var photo = product.Photos.FirstOrDefault();
+				if (photo != null) imgPath = "/contents/Products/" + photo.FileName;
+				<img class="card-img-top" src="@imgPath" alt="Card image cap">
+			}
+
+			<div class="card-body">
+				<h5 class="card-title">@product.Title</h5>
+				<p class="card-text">
+					<div>@product.Description</div>
+					<div>
+						Chủ đề:
+						<strong class="text-danger">
+							@string.Join(" | ",product.ProductsAndCategories.Select(pc=>pc.ProductCategory.Title))
+						</strong>
+					</div>
+					<div class="author-row">
+						Tác giả: <strong>@product.Author.UserName</strong> |
+						Ngày cập nhật: <i>@product.DateUpdated.ToShortDateString()</i>
+					</div>
+				</p>
+				<a class="btn btn-primary" asp-area="Products" asp-controller="ViewProduct" asp-action="Detail" asp-route-productslug="@product.Slug">Xem chi tiết</a>
+			</div>
+		</div>
+	}
+</div>
+
+<h2>Các bài viết</h2>
+@foreach (var post in posts)
+{
+	<div class="media mt-3" style="border-bottom:3px solid #cccccc">
+		<img class="w-0" src="/Contents/planet/planet2.PNG" alt="Generic placeholder image">
+		<div class="media-body">
+			<h5 class="mt-0">
+				<a asp-area="blog" asp-controller="ViewPost" asp-action="Detail" asp-route-postslug="@post.Slug">@post.Title</a>
+			</h5>
+			@post.Description
+			<div>
+				Chủ đề:
+				<strong class="text-danger">
+					@string.Join(" | ",post.PostsAndCategories.Select(pc=>pc.PostCategory.Title))
+				</strong>
+			</div>
+			<div class="author-row">
+				Tác giả: <strong>@post.Author.UserName</strong> |
+				Ngày cập nhật: <i>@post.DateUpdated.ToShortDateString()</i>
+			</div>
+		</div>
+	</div>
+}

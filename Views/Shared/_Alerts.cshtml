@@ -1,0 +1,12 @@
+﻿@{
+    var message = TempData["StatusMessage"]as string;    
+}
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        @Html.Raw(message)
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}

@@ -1,0 +1,29 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using _06_MvcWeb.Models
+
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <form asp-area="Identity" asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="navbar-right">
+        <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item">
+                <a class="nav-link text-light" asp-area="Identity" asp-controller="Manage" asp-action="Index" title="Manage"><i class="far fa-user"></i> @UserManager.GetUserName(User)</a>
+            </li>
+            <li class="nav-item text-light">
+                <button type="submit" class="nav-link text-light"><i class="fas fa-sign-out-alt text-white" title="Đăng xuất"></i> Đăng xuất |</button>
+            </li>
+        </ul>
+    </form>
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li class="nav-item">
+            <a class="nav-link text-light" asp-area="Identity" asp-controller="Account" asp-action="Login">
+                <i class="fas fa-sign-in-alt"></i>
+            </a>
+        </li>
+    </ul>
+}

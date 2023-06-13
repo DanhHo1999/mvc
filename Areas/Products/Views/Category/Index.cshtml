@@ -1,0 +1,57 @@
+﻿@model IEnumerable<_06_MvcWeb.Products.Models.ProductCategory>
+
+@{
+    ViewData["Title"] = "Các chuyên mục sản phẩm";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a class="btn btn-primary btn-sm" asp-action="Create">Tạo chuyên mục</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Slug)
+            </th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.OrderBy(c=>c.Title)) {
+    await RenderCategory(item,0);
+}
+    </tbody>
+</table>
+@{
+    async Task RenderCategory(ProductCategory category_Product,int level)
+    {
+        string prefix = string.Concat(Enumerable.Repeat("&nbsp;", level*5));
+        <tr>
+            <td>
+                <a class="text-decoration-none" asp-action="Edit" asp-route-id="@category_Product.Id">@Html.Raw(prefix) @Html.DisplayFor(modelItem => category_Product.Title)</a>
+                
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => category_Product.Slug)
+            </td>
+            <td>
+
+                <a class="text-decoration-none" asp-action="Details" asp-route-id="@category_Product.Id">Xem</a> |
+                <a class="text-decoration-none" asp-action="Delete" asp-route-id="@category_Product.Id">Xóa</a>
+            </td>
+        </tr>
+        
+        if (category_Product.CategoryChildren?.Count > 0)
+        {
+            foreach (var category_Product_child in category_Product.CategoryChildren.OrderBy(c => c.Title))
+            {
+                await RenderCategory(category_Product_child,level+1);
+            }
+        }
+    }
+}
